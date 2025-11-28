@@ -6,7 +6,6 @@ import joblib
 # -------------------------------------------
 # 1. Page Config (MUST BE THE FIRST STREAMLIT COMMAND)
 # -------------------------------------------
-# لازم السطر ده يكون في الأول خالص قبل أي كود تاني ليه علاقة بـ streamlit
 st.set_page_config(page_title="California Housing Prediction", page_icon="🏡")
 
 # -------------------------------------------
@@ -14,7 +13,6 @@ st.set_page_config(page_title="California Housing Prediction", page_icon="🏡")
 # -------------------------------------------
 @st.cache_resource
 def load_artifacts():
-    # تأكد إن الملفات دي موجودة في نفس الفولدر مع ملف app.py
     model = joblib.load('housing_model.pkl')
     scaler = joblib.load('scaler.pkl')
     return model, scaler
@@ -46,7 +44,6 @@ def user_input_features():
     AveBedrms = st.sidebar.slider('Average Bedrooms', 0.5, 5.0, 1.0)
     Population = st.sidebar.slider('Population', 100, 10000, 1000)
     AveOccup = st.sidebar.slider('Average Occupancy', 1.0, 6.0, 3.0)
-    # تعديل بسيط: أرقام الـ Latitude/Longitude خليناها تظهر بـ format دقيق عشان الكسور
     Latitude = st.sidebar.number_input('Latitude', 32.0, 42.0, 34.05, format="%.2f")
     Longitude = st.sidebar.number_input('Longitude', -125.0, -114.0, -118.24, format="%.2f")
     
