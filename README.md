@@ -6,7 +6,7 @@
 ![Streamlit](https://img.shields.io/badge/App-Streamlit-red?logo=streamlit&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A comprehensive Machine Learning project to classify California housing prices into **Low**, **Medium**, and **High** categories. 
+A comprehensive Machine Learning project to classify California housing prices into **Low**, **Medium**, and **High** categories.
 
 This project goes beyond basic modeling by implementing **Advanced Feature Engineering** (Geospatial Analysis), **Ensemble Learning** (Bagging & Random Forest), and rigorous **Hyperparameter Tuning** using **Bayesian Optimization (Optuna)**.
 
@@ -21,7 +21,7 @@ This project goes beyond basic modeling by implementing **Advanced Feature Engin
 ### Key Features
 | Feature | Description |
 | :--- | :--- |
-| `MedInc` | Median Income in block group (Strongest Predictor) |
+| `MedInc` | Median Income in block group (**Strongest Predictor**) |
 | `HouseAge` | Median House Age in block group |
 | `AveRooms` | Average number of rooms per household |
 | `Latitude/Longitude` | Geographic coordinates |
@@ -55,29 +55,3 @@ def calculate_distance(lat, lon, city_lat, city_lon):
 
 # Feature: Distance to Los Angeles
 df['Dist_to_LA'] = calculate_distance(df['Latitude'], df['Longitude'], 34.05, -118.24)
-
-2. Bayesian Optimization (Optuna)
-Instead of the slow GridSearch, we used Optuna with TPESampler.
-
-Search Space: n_estimators (100-500), max_depth (10-50), min_samples_split, etc.
-
-Validation: 5-Fold Cross-Validation to ensure robustness.
-
-We compared Baseline models against Optuna-Tuned models. The Bagging Classifier showed the best stability.
-
-California-Housing-Classification/
-│
-├── Trees_1.ipynb          # 📓 Main Notebook (EDA, Engineering, Optuna, Modeling)
-├── app.py                 # 🚀 Streamlit Application Script
-├── housing_model.pkl      # 💾 Saved Optimized Model
-├── scaler.pkl             # ⚖️ Saved StandardScaler
-├── requirements.txt       # 📦 Dependencies
-└── README.md              # 📄 Documentation
-
-
-📌 Future Improvements
-Stacking: Combine Gradient Boosting (XGBoost/LightGBM) with Bagging.
-
-Deep Learning: Implement a Neural Network for potential accuracy gains.
-
-Cloud Deployment: Deploy the Streamlit app to AWS EC2 or Streamlit Cloud.
