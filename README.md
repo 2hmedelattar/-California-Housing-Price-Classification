@@ -6,52 +6,82 @@
 ![Streamlit](https://img.shields.io/badge/App-Streamlit-red?logo=streamlit&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A comprehensive Machine Learning project to classify California housing prices into **Low**, **Medium**, and **High** categories.
+This project builds a robust Machine Learning pipeline to classify housing prices in California into **Low**, **Medium**, and **High** categories. 
 
-This project goes beyond basic modeling by implementing **Advanced Feature Engineering** (Geospatial Analysis), **Ensemble Learning** (Bagging & Random Forest), and rigorous **Hyperparameter Tuning** using **Bayesian Optimization (Optuna)**.
+It moves beyond basic modeling by implementing **Advanced Feature Engineering** (Geospatial Analysis) and rigorous **Hyperparameter Tuning** using **Bayesian Optimization (Optuna)**. The final model is deployed as an interactive web app using **Streamlit**.
 
 ---
 
-## 📂 Dataset Overview
+## 📂 Dataset
 
-**Source:** [California Housing Dataset (via Scikit-Learn)](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html)  
-**Records:** 20,640 samples  
-**Problem Type:** Multi-class Classification (Target binned into 3 classes).
+**Source:** [California Housing Dataset (Scikit-Learn)](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html)  
+**Total Samples:** 20,640 records
 
-### Key Features
-| Feature | Description |
-| :--- | :--- |
-| `MedInc` | Median Income in block group (**Strongest Predictor**) |
-| `HouseAge` | Median House Age in block group |
-| `AveRooms` | Average number of rooms per household |
-| `Latitude/Longitude` | Geographic coordinates |
-| **Derived Features** | Distance to Coast, Rotated Coordinates, etc. |
+### **Columns Used**
+
+* `MedInc` (Median Income - Strongest Predictor)
+* `HouseAge`
+* `AveRooms`
+* `AveBedrms`
+* `Population`
+* `AveOccup`
+* `Latitude` & `Longitude`
+
+### **Target Variable (Engineered)**
+
+The original continuous target `MedHouseValue` was binned into 3 classes to transform the problem into a classification task:
+* **0:** Low Price
+* **1:** Medium Price
+* **2:** High Price
 
 ---
 
 ## 🎯 Project Objective
 
-To build a high-performance classification model that predicts property value categories. The workflow emphasizes:
-1.  **Interpretation:** Understanding *why* a house is expensive.
-2.  **Optimization:** Using `Optuna` to find the global optimum hyperparameters.
-3.  **Deployment:** Serving the model via an interactive web app.
+Develop a **Machine Learning Classifier** to predict property value categories based on demographic and geographic data, optimizing for **Accuracy** using Ensemble methods.
 
 ---
 
-## 🧠 Methodology & Feature Engineering
+## 🧠 Model Architecture & Methodology
 
-The project logic is encapsulated in `Trees_1.ipynb`.
+The project follows a strict pipeline implemented in a **Jupyter Notebook**.
 
-### 1. Advanced Feature Engineering
-We didn't just use raw data. We created features to capture the **geographical context**:
+### **Techniques Applied**
 
-* **Rotated Coordinates:** Since California lies diagonally, we rotated coordinates by 45° to help Decision Trees split data more effectively.
-* **Proximity to Hubs:** Calculated Euclidean distance to major economic centers (LA & SF).
+1.  **Data Preprocessing:**
+    * Quantile Binning (`pd.qcut`) for balanced classes.
+    * Outlier handling (Clipping Rooms/Bedrooms).
+    * Standard Scaling (`StandardScaler`).
 
-```python
-# Snippet: Calculating Distance to Major Cities
-def calculate_distance(lat, lon, city_lat, city_lon):
-    return np.sqrt((lat - city_lat) ** 2 + (lon - city_lon) ** 2)
+2.  **Feature Engineering:**
+    * **Geospatial Analysis:** Calculated distance to economic hubs (Los Angeles & San Francisco).
+    * **Rotated Coordinates:** Applied 45° rotation to help Decision Trees capture diagonal geographic patterns.
 
-# Feature: Distance to Los Angeles
-df['Dist_to_LA'] = calculate_distance(df['Latitude'], df['Longitude'], 34.05, -118.24)
+3.  **Models & Optimization:**
+    * **Decision Tree:** Tuned `max_depth`, `min_samples_leaf`.
+    * **Bagging Classifier:** Tuned `n_estimators`, `max_samples`.
+    * **Random Forest:** Tuned using **Optuna** (Bayesian Optimization).
+
+---
+
+## 🛠️ Tech Stack
+
+* **Python**
+* **Pandas & NumPy** (Data Manipulation)
+* **Matplotlib & Seaborn** (Visualization)
+* **Scikit-Learn** (Modeling)
+* **Optuna** (Hyperparameter Tuning)
+* **Streamlit** (Web Deployment)
+
+---
+
+## 📘 Project Structure
+
+```text
+California-Housing-Classification/
+│── Trees_1.ipynb          # 📓 Main Notebook (EDA, Engineering, Optuna)
+│── app.py                 # 🚀 Streamlit Application Script
+│── housing_model.pkl      # 💾 Saved Optimized Model
+│── scaler.pkl             # ⚖️ Saved Scaler
+│── requirements.txt       # 📦 Dependencies
+└── README.md              # 📄 Project Documentation
