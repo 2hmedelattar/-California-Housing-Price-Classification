@@ -1,32 +1,83 @@
 # 🏡 California Housing Price Classification
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![Scikit-Learn](https://img.shields.io/badge/Library-Scikit--Learn-orange)
-![Optuna](https://img.shields.io/badge/Optimization-Optuna-blueviolet)
-![Streamlit](https://img.shields.io/badge/Deployment-Streamlit-red)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn-orange?logo=scikit-learn&logoColor=white)
+![Optuna](https://img.shields.io/badge/Optimization-Optuna-blueviolet?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/App-Streamlit-red?logo=streamlit&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## 📌 Project Overview
-This project aims to classify housing prices in California into three categories (**Low**, **Medium**, **High**) based on various features like median income, house age, and location.
+A comprehensive Machine Learning project to classify California housing prices into **Low**, **Medium**, and **High** categories. 
 
-The solution leverages **Ensemble Learning (Bagging)** and **Decision Trees**, with hyperparameters rigorously tuned using **Bayesian Optimization (Optuna)** to maximize accuracy.
+This project goes beyond basic modeling by implementing **Advanced Feature Engineering** (Geospatial Analysis), **Ensemble Learning** (Bagging & Random Forest), and rigorous **Hyperparameter Tuning** using **Bayesian Optimization (Optuna)**.
 
-## 🛠️ Key Features
-- **Advanced Preprocessing:** - Quantile Binning (`pd.qcut`) for balanced target classes.
-  - Interaction features & Geospatial Engineering (Rotated Coordinates, Distance to LA/SF).
-- **Model Optimization:** - Used **Optuna** to tune hyperparameters for Decision Trees, Random Forests, and Bagging Classifiers.
-  - Comparison between Default vs. Tuned models to quantify improvement.
-- **Deployment:** - Interactive Web App built with **Streamlit** for real-time predictions.
+---
 
-## 📊 Results
-| Model | Accuracy |
-|-------|----------|
-| Decision Tree | ~79% |
-| **Bagging (Optimized)** | **~85%** |
-| Random Forest | ~85% |
+## 📂 Dataset Overview
 
-*Key Insight: The **Median Income** and **Geographic Location** proved to be the strongest predictors of housing prices.*
+**Source:** [California Housing Dataset (via Scikit-Learn)](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html)  
+**Records:** 20,640 samples  
+**Problem Type:** Multi-class Classification (Target binned into 3 classes).
 
-## 🚀 How to Run
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/YOUR_USERNAME/California-Housing-Price-Classification.git](https://github.com/YOUR_USERNAME/California-Housing-Price-Classification.git)
+### Key Features
+| Feature | Description |
+| :--- | :--- |
+| `MedInc` | Median Income in block group (Strongest Predictor) |
+| `HouseAge` | Median House Age in block group |
+| `AveRooms` | Average number of rooms per household |
+| `Latitude/Longitude` | Geographic coordinates |
+| **Derived Features** | Distance to Coast, Rotated Coordinates, etc. |
+
+---
+
+## 🎯 Project Objective
+
+To build a high-performance classification model that predicts property value categories. The workflow emphasizes:
+1.  **Interpretation:** Understanding *why* a house is expensive.
+2.  **Optimization:** Using `Optuna` to find the global optimum hyperparameters.
+3.  **Deployment:** Serving the model via an interactive web app.
+
+---
+
+## 🧠 Methodology & Feature Engineering
+
+The project logic is encapsulated in `Trees_1.ipynb`.
+
+### 1. Advanced Feature Engineering
+We didn't just use raw data. We created features to capture the **geographical context**:
+
+* **Rotated Coordinates:** Since California lies diagonally, we rotated coordinates by 45° to help Decision Trees split data more effectively.
+* **Proximity to Hubs:** Calculated Euclidean distance to major economic centers (LA & SF).
+
+```python
+# Snippet: Calculating Distance to Major Cities
+def calculate_distance(lat, lon, city_lat, city_lon):
+    return np.sqrt((lat - city_lat) ** 2 + (lon - city_lon) ** 2)
+
+# Feature: Distance to Los Angeles
+df['Dist_to_LA'] = calculate_distance(df['Latitude'], df['Longitude'], 34.05, -118.24)
+
+2. Bayesian Optimization (Optuna)
+Instead of the slow GridSearch, we used Optuna with TPESampler.
+
+Search Space: n_estimators (100-500), max_depth (10-50), min_samples_split, etc.
+
+Validation: 5-Fold Cross-Validation to ensure robustness.
+
+We compared Baseline models against Optuna-Tuned models. The Bagging Classifier showed the best stability.
+
+California-Housing-Classification/
+│
+├── Trees_1.ipynb          # 📓 Main Notebook (EDA, Engineering, Optuna, Modeling)
+├── app.py                 # 🚀 Streamlit Application Script
+├── housing_model.pkl      # 💾 Saved Optimized Model
+├── scaler.pkl             # ⚖️ Saved StandardScaler
+├── requirements.txt       # 📦 Dependencies
+└── README.md              # 📄 Documentation
+
+
+📌 Future Improvements
+Stacking: Combine Gradient Boosting (XGBoost/LightGBM) with Bagging.
+
+Deep Learning: Implement a Neural Network for potential accuracy gains.
+
+Cloud Deployment: Deploy the Streamlit app to AWS EC2 or Streamlit Cloud.
